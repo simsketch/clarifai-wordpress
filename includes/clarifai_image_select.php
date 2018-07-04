@@ -18,9 +18,6 @@
                     <td>
             <label for="clarifai_api_key">API key</label>
             <input type="text" id="clarifai_api_key" name="clarifai_api_key" placeholder="API key" value="<?php echo $clarifai_api_key?>" />
-            <br/>
-            <label for="clarifai_api_secret">API secret</label>
-            <input type="text" id="clarifai_api_secret" name="clarifai_api_secret" placeholder="API secret" value="<?php echo $clarifai_api_secret ?>" />
                     </td>
                 </tr>
                 <tr valign="top">

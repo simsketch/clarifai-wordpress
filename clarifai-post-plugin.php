@@ -1,15 +1,16 @@
 <?php
 /**
  * @package clarifai_plugin
- * @version 1.0
+ * @version 1.1
  */
 /*
 Plugin Name: Clarifai Keyword Tagger for Featured Images
 Plugin URI: http://wordpress.org/extend/plugins/#
 Description: This is a Clarifai plugin for keyword tagging a post base on the Featured Image.
 Author: Elon Zito
-Version: 1.0
-Author URI: http://zplex.gq/
+Version: 1.1
+Updated: 7/4/2018
+Author URI: http://github.com/simsketch/
 */
 function wpdocs_theme_name_scripts() {
     wp_enqueue_script( 'script-name', get_template_directory_uri() . '/js/clarifai.js', array(), '1.0.0', true );
@@ -21,10 +22,10 @@ function custom_meta_box_markup($object)
     wp_nonce_field(basename(__FILE__), "meta-box-nonce");
     ?>
         <div style="text-align:center;">
-		    <img src="https://www.clarifai.com/static/images/logo.png" align="center" style="margin: 20px;width: 120px;"/>
+		    <img src="https://clarifai.com/cms-assets/20180307033326/logo2.svg" align="center" style="margin: 20px;width: 120px;"/>
 		    <input type="button" id="goButton" value="Get Keywords" onclick="getTags()" style="width:100%;"/>
 		    <div id="status"></div>
-		    <script src="https://sdk.clarifai.com/js/clarifai-2.0.9.js"></script>
+		    <script src="https://sdk.clarifai.com/js/clarifai-latest.js"></script>
 		    <script>
 		    //window.onload = function () { featuredImageTagger() }
 			//window.goButton = document.getElementById('goButton');
@@ -33,21 +34,21 @@ function custom_meta_box_markup($object)
 		    function getTags() {
 		    	var img = document.querySelector('#postimagediv img').getAttribute("src");
 		    	document.getElementById('status').innerHTML = 'Fetching tags...';
-	    		var app = new Clarifai.App(
-			        '<?php echo get_option('clarifai_api_key')?>',
-			        '<?php echo get_option('clarifai_api_secret')?>'
-			  	);
+	    		var app = new Clarifai.App({
+			        apiKey: '<?php echo get_option('clarifai_api_key')?>'
+				});
 		    	app.models.predict(Clarifai.GENERAL_MODEL, img).then(
 				  function(response) {
 				      console.log(response);
 				      var el = document.getElementById('new-tag-post_tag');
 				      var keywords = [];
-				      var keywordTags = response.data.outputs[0].data.concepts;
+					  var keywordTags = response.outputs[0].data.concepts;
+					  //console.log("array: "+keywordTags);
 				      for(var i=0;i<keywordTags.length;i++){
 				        var name = keywordTags[i].name;
 				      	keywords.push(name);
 				      }
-				      console.log(keywords);
+				      //console.log(keywords);
 				      keywords = JSON.stringify(keywords);
 					  keywords = keywords.replace(/"/g,"");
 					  keywords = keywords.replace("[","");
@@ -81,13 +82,11 @@ function save_clarifai_data( $post_id ){
 		return;
 	}
 	// store custom fields values
-	// cholesterol string
-	if ( isset( $_REQUEST['ai_apiSecret'] ) ) {
-		update_post_meta( $post_id, 'ai_apiSecret_value', sanitize_text_field( $_POST['ai_apiSecret_value'] ) );
+	if ( isset( $_REQUEST['ai_apiKey_value'] ) ) {
+		update_post_meta( $post_id, 'ai_apiKey_value', sanitize_text_field( $_POST['ai_apiKey_value'] ) );
 	}
 	
 	// store custom fields values
-	// carbohydrates string
 	if ( isset( $_REQUEST['ai_apiSecret'] ) ) {
 		update_post_meta( $post_id, 'ai_apiSecret_value', sanitize_text_field( $_POST['ai_apiSecret_value'] ) );
 	}

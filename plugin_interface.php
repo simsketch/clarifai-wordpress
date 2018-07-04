@@ -9,12 +9,10 @@ function clarifai_create_menu() {
 
 function register_clarifaisettings() {
 	register_setting('clarifai-settings-group', 'clarifai_api_key');
-	register_setting('clarifai-settings-group', 'clarifai_api_secret');
 }
 
 function clarifai_settings_page() {
 	$clarifai_api_key = get_option('clarifai_api_key');
-	$clarifai_api_secret = get_option('clarifai_api_secret');
 	include('includes/clarifai_header.php');
 	include('includes/clarifai_image_select.php');
 	include('includes/clarifai_footer.php');
